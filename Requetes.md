@@ -10,6 +10,7 @@ Yuchen BAI
 
 -------------
 
+<<<<<<< Updated upstream
 1. Load ```.csv``` files and create table
 
    ```
@@ -39,3 +40,32 @@ Yuchen BAI
    ```
 
    
+=======
+1. Load ```.csv``` files
+
+   * ```LOAD CSV FROM 'file:///combats.csv' AS row RETURN count(row)```
+
+     
+
+   * ```LOAD CSV FROM 'file:///pokemon.csv' AS row RETURN count(row)```
+   
+   - ```
+     LOAD CSV FROM 'file:///pokemon.csv' AS row
+     CREATE (p:Pokemon{
+         id: toInteger(row[0]),
+         name: row[1],
+         type1: row[2],
+         type2: row[3],
+         hp: toInteger(row[4]),
+         attack: toInteger(row[5]),
+         defense:toInteger(row[6]),
+         sp_atk: toInteger(row[7]),
+         sp_def: toInteger(row[8]),
+         speed: toInteger(row[9]),
+         generation: toInteger(row[10]),
+         legendary: toBoolean(row[11])
+     })
+     ```
+   
+     
+>>>>>>> Stashed changes
