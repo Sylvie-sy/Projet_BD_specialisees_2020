@@ -11,6 +11,9 @@
 ### 1. Choisir un jeu de données.
 
 - Nous avons choisi **Pokémon** comme notre base de données: https://www.kaggle.com/terminus7/pokemon-challenge?select=pokemon.csv
+
+  <img src="/Users/macbookpro/Documents/M2-Bases de données specialisées/période2-projet/Projet_BD_specialisees_2020/rapport/pokemon.jpg" alt="pokemon" style="zoom:50%;" />
+
 - Il y a 2 tableaux csv. 
   -  L'un est la liste des Pokémon (*pokemon.csv*), qui comprend l'identifiant du Pokémon, son nom, ses types d'attaque, les différentes valeurs d'attributs, les générations et les légendes.
   - L'autre est le tableau des combats des Pokémon (*combats.csv*), qui comprend les résultats de leurs rencontres individuelles.
