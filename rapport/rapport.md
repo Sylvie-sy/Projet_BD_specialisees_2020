@@ -12,7 +12,7 @@
 
 - Nous avons choisi **Pokémon** comme notre base de données: https://www.kaggle.com/terminus7/pokemon-challenge?select=pokemon.csv
 
-  <img src="pokemon.jpg" alt="pokemon" width="600" height="300" />
+  <img src="pokemon.jpg" alt="pokemon" width="750" height="300" />
 
 - Il y a 2 tableaux csv. 
   -  L'un est la liste des Pokémon (*pokemon.csv*), qui comprend l'identifiant du Pokémon, son nom, ses types d'attaque, les différentes valeurs d'attributs, les générations et les légendes.
@@ -22,15 +22,15 @@
 
 - Réussir à importer 2 tableaux csv selon des requêtes de notre fichier Requetes.
 
-  <img src="创建psql1.png" alt="创建psql1" style="zoom:50%;" />
+  ![创建psql-1](创建psql-1.png)
+  
+  ![创建psql-2](创建psql-2.png)
 
 ### 3. Implémenter une base de données graphe dans Neo4j
 
 - Réussir à importer 2 tableaux csv selon des requêtes de notre fichier Requetes.
 
-  <img src="创建neo4j.jpg" alt="创建neo4j" style="zoom:50%;" />
-
-
+  ![创建neo4j](创建neo4j.jpg)
 
 
 
