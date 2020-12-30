@@ -1,4 +1,4 @@
-Requetes
+### Requetes
 
 -----------
 
@@ -52,15 +52,30 @@ Yuchen BAI
 
    
 
-2. Requêtres intérressante
+2. Requêtres intéressant
+
+   * 
 
    ```cypher
-   MATCH (p:Pokemon)-[:COMBAT*1..3]-(f:Pokemon) WHERE p.name="Pikachu" AND f<>p return f 
-   ```
-
-   ```cypher
-   MATCH (p1:Pokemon)-[c:COMBAT]-(p2:Pokemon) WHERE c.winner = p1.id RETURN p1 LIMIT 200
+   MATCH (p1:Pokemon)-[c:COMBAT]-(p2:Pokemon) WHERE p1.name='Pikachu' AND c.winner=p2.id RETURN p2.id, p2.name ORDER BY p2.id
    ```
 
    
 
+   
+
+   ```sql
+   SELECT P.id, P.name 
+   FROM pokemon P
+   WHERE P.name <> 'Pikachu' 
+   AND P.id IN (
+   	SELECT C.winner
+   	FROM combats C JOIN pokemon P
+   	ON (P.id = C.first_pokemon OR P.ID = C.second_pokemon)
+   	WHERE P.name = 'Pikachu'
+   );
+   ```
+
+   
+
+   
