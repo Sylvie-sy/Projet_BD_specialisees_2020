@@ -156,3 +156,23 @@
     );
     ```
 
+- On va trouver les **winrates** pour tous les pokémons
+
+  - Neo4j
+
+    ```
+    
+    ```
+
+  - Sql
+
+    ```sql
+    SELECT DISTINCT first_pokemon, ROUND(CAST(win_nb as numeric)/CAST(total as numeric),2) AS Winrate
+    FROM (
+    SELECT first_pokemon,
+    COUNT(*) total,
+        SUM(case when first_pokemon=winner then 1 else 0 end) AS win_nb
+        FROM combats
+        GROUP BY first_pokemon
+    ) x;
+    ```
