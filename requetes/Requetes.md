@@ -1,16 +1,12 @@
-### Requetes
+# Requêtes
 
------------
+*WANG Shiying, 21960641, M2 Informatique parcours DATA*  (shiyingw95@gmail.com)
 
-Shiying WANG
-
-Yuchen BAI
+*BAI Yuchen, 71418516,  M2 Informatique parcours DATA (yuchenbai@hotmail.com)*
 
 
 
--------------
-
-#### 1. Importer les fichiers  ```.csv``` et créer les tables
+## Importer les fichiers  ```.csv``` et créer les tables
 
 * Pour Neo4j
 
@@ -57,7 +53,7 @@ Yuchen BAI
   MERGE (p1)-[:COMBAT {winner: toInteger(row.Winner)}]-(p2)
   ```
 
-  Pour PostgreSQL
+* Pour PostgreSQL
 
   ```sql
   -------------------------
@@ -137,32 +133,30 @@ Yuchen BAI
 
   
 
-  #### 2. Liste de Requêtes
+## Liste de Requêtes
 
-  * On va trouver tous les pokémons qui a gagné le match avec Pikachu
+- On va trouver tous les pokémons qui a gagné le match avec Pikachu
+  - Neo4j
 
-    * Neo4j
+    ```cypher
+    MATCH (p1:Pokemon)-[c:COMBAT]-(p2:Pokemon) WHERE p1.name='Pikachu' AND c.winner=p2.id RETURN p2.id, p2.name ORDER BY p2.id
+    ```
 
-      ```cypher
-      MATCH (p1:Pokemon)-[c:COMBAT]-(p2:Pokemon) WHERE p1.name='Pikachu' AND c.winner=p2.id RETURN p2.id, p2.name ORDER BY p2.id
-      ```
+  - Sql
 
-    * Sql
-
-      ```sql
-      SELECT P.id, P.name 
-      FROM pokemon P
-      WHERE P.name <> 'Pikachu' 
-      AND P.id IN (
-      	SELECT C.winner
-      	FROM combats C JOIN pokemon P
-      	ON (P.id = C.first_pokemon OR P.ID = C.second_pokemon)
-      	WHERE P.name = 'Pikachu'
-      );
-      ```
-
-      
+    ```sql
+    SELECT P.id, P.name 
+    FROM pokemon P
+    WHERE P.name <> 'Pikachu' 
+    AND P.id IN (
+    	SELECT C.winner
+    	FROM combats C JOIN pokemon P
+    	ON (P.id = C.first_pokemon OR P.ID = C.second_pokemon)
+    	WHERE P.name = 'Pikachu'
+    );
+    ```
 
   
 
-  
+
+

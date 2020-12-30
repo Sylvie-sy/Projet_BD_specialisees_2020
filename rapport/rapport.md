@@ -6,13 +6,13 @@
 
 
 
-# Choix et import d'un jeu de données
+## Choix et import d'un jeu de données
 
 ### 1. Choisir un jeu de données.
 
 - Nous avons choisi **Pokémon** comme notre base de données: https://www.kaggle.com/terminus7/pokemon-challenge?select=pokemon.csv
 
-  <img src="/Users/macbookpro/Documents/M2-Bases de données specialisées/période2-projet/Projet_BD_specialisees_2020/rapport/pokemon.jpg" alt="pokemon" style="zoom:50%;" />
+  <img src="pokemon.jpg" alt="pokemon" style="zoom:100%;" />
 
 - Il y a 2 tableaux csv. 
   -  L'un est la liste des Pokémon (*pokemon.csv*), qui comprend l'identifiant du Pokémon, son nom, ses types d'attaque, les différentes valeurs d'attributs, les générations et les légendes.
@@ -22,15 +22,15 @@
 
 - Réussir à importer 2 tableaux csv selon des requêtes de notre fichier Requetes.
 
-  <img src="/Users/macbookpro/Documents/M2-Bases de données specialisées/période2-projet/Projet_BD_specialisees_2020/rapport/创建psql2.png" alt="创建psql2" style="zoom:50%;" />
+  <img src="创建psql2.png" alt="创建psql2" style="zoom:50%;" />
   
-  <img src="/Users/macbookpro/Documents/M2-Bases de données specialisées/période2-projet/Projet_BD_specialisees_2020/rapport/创建psql1.png" alt="创建psql1" style="zoom:50%;" />
+  <img src="创建psql1.png" alt="创建psql1" style="zoom:50%;" />
 
 ### 3. Implémenter une base de données graphe dans Neo4j
 
 - Réussir à importer 2 tableaux csv selon des requêtes de notre fichier Requetes.
 
-  <img src="/Users/macbookpro/Documents/M2-Bases de données specialisées/période2-projet/Projet_BD_specialisees_2020/rapport/创建neo4j.jpg" alt="创建neo4j" style="zoom:50%;" />
+  <img src="创建neo4j.jpg" alt="创建neo4j" style="zoom:50%;" />
 
 
 
@@ -40,7 +40,7 @@
 
 (记得写：nos choix de modélisation)
 
-# Requêtes
+## Requêtes
 
 ### 1. Requêtes Cypher
 
@@ -58,7 +58,7 @@
 
 
 
-# Analytique de graphe
+## Analytique de graphe
 
 ### 1. Algorithmes de la Grouph Data Science Library
 
@@ -72,5 +72,5 @@
 
 
 
-# Bonus
+## Bonus
 
