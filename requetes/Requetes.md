@@ -135,7 +135,7 @@
 
 ## Liste de Requêtes
 
-- On va trouver tous les pokémons qui a gagné le match avec Pikachu
+- On va trouver tous les pokémons qui a gagné le match avec Pikachu, retourne **id** et **name** de pokémon
   - Neo4j
 
     ```cypher
@@ -155,8 +155,4 @@
     	WHERE P.name = 'Pikachu'
     );
     ```
-
-  
-
-
 

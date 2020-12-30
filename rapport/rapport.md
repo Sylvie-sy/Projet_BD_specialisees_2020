@@ -12,7 +12,7 @@
 
 - Nous avons choisi **Pokémon** comme notre base de données: https://www.kaggle.com/terminus7/pokemon-challenge?select=pokemon.csv
 
-  <img src="pokemon.jpg" alt="pokemon" style="zoom:100%;" />
+  <img src="pokemon.jpg" alt="pokemon" width="600" height="300" />
 
 - Il y a 2 tableaux csv. 
   -  L'un est la liste des Pokémon (*pokemon.csv*), qui comprend l'identifiant du Pokémon, son nom, ses types d'attaque, les différentes valeurs d'attributs, les générations et les légendes.
@@ -22,8 +22,6 @@
 
 - Réussir à importer 2 tableaux csv selon des requêtes de notre fichier Requetes.
 
-  <img src="创建psql2.png" alt="创建psql2" style="zoom:50%;" />
-  
   <img src="创建psql1.png" alt="创建psql1" style="zoom:50%;" />
 
 ### 3. Implémenter une base de données graphe dans Neo4j
@@ -40,21 +38,9 @@
 
 (记得写：nos choix de modélisation)
 
-## Requêtes
+## Neo4j (Cypher) vs PostgreSQL (SQL) 
 
-### 1. Requêtes Cypher
-
-
-
-### 2. Requêtes SQL récursive
-
-
-
-### 3. Comparer l'efficacité des requêtes Cypher et des requêtes SQL
-
-
-
-### 4. Trouver une requête SQL plus efficace qu'une requête Cypher
+### 1. 
 
 
 
