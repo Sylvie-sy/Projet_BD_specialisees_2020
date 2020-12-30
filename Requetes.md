@@ -13,7 +13,18 @@ Yuchen BAI
 
 1. Load ```.csv``` files and create table
 
+   ```cypher
+   DROP INDEX index_pokemon [IF EXISTS]
    ```
+
+   ```cypher
+   CREATE INDEX index_pokemon [IF NOT EXISTS]
+   FOR (n:Pokemon)
+   ON (n.Id,
+   	n.Name)
+   ```
+
+   ```cypher
    LOAD CSV with headers FROM 'file:///pokemon.csv' AS row
    CREATE (p:Pokemon{
        id: toInteger(row.Id),
@@ -36,7 +47,20 @@ Yuchen BAI
    :auto USING PERIODIC COMMIT 500
    LOAD CSV WITH HEADERS FROM 'file:///combats.csv' AS row
    MATCH (p1:Pokemon {id: toInteger(row.First_pokemon)}), (p2:Pokemon {id: toInteger(row.Second_pokemon)})
-   MERGE (p1)-[:COMBAT {winner: row.Winner}]-(p2)
+   MERGE (p1)-[:COMBAT {winner: toInteger(row.Winner)}]-(p2)
    ```
 
    
+
+2. Requêtres intérressante
+
+   ```cypher
+   MATCH (p:Pokemon)-[:COMBAT*1..3]-(f:Pokemon) WHERE p.name="Pikachu" AND f<>p return f 
+   ```
+
+   ```cypher
+   MATCH (p1:Pokemon)-[c:COMBAT]-(p2:Pokemon) WHERE c.winner = p1.id RETURN p1 LIMIT 200
+   ```
+
+   
+
