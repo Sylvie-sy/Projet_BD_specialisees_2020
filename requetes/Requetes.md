@@ -11,11 +11,11 @@
 * Pour Neo4j
 
   ```cypher
-  DROP INDEX index_pokemon [IF EXISTS]
+  DROP INDEX index_pokemon IF EXISTS
   ```
 
   ```cypher
-  CREATE INDEX index_pokemon [IF NOT EXISTS]
+  CREATE INDEX index_pokemon IF NOT EXISTS
   FOR (n:Pokemon)
   ON (n.Id, n.Name)
   ```
@@ -160,8 +160,12 @@
 
   - Neo4j
 
-    ```
-    
+    ```cypher
+    MATCH (p1:Pokemon)-[c:COMBAT]-(p2:Pokemon) 
+    WHERE p1.id = c.winner
+    WITH p1, toFloat(COUNT(c))/size((p1)-[:COMBAT]-(:Pokemon)) AS number
+    RETURN p1.name, ROUND(number, 2) AS winrate
+    ORDER BY winrate DESC
     ```
 
   - Sql
@@ -174,5 +178,6 @@
         SUM(case when first_pokemon=winner then 1 else 0 end) AS win_nb
         FROM combats
         GROUP BY first_pokemon
-    ) x;
+    ) x
+    ORDER BY Winrate;
     ```
