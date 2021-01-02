@@ -153,6 +153,8 @@
 
      <img src="recursive_psql.png"/>
 
+     <img src="recursive_psql_time.png"/>
+
 ## Analytique de graphe
 
 ### 1. Algorithmes de la Grouph Data Science Library

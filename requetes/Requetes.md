@@ -283,10 +283,8 @@
         JOIN cte ON P2.id = cte.second_pokemon
         WHERE (cte.depth<3 AND P2.name <> 'Pikachu')
     )
-    SELECT DISTINCT P.id, P.name
-    FROM pokemon P 
-    JOIN combats C
-    ON P.id = C.first_pokemon;
+    SELECT DISTINCT C.id, C.name, C.depth
+    FROM cte C;
     ```
 
     
