@@ -264,6 +264,28 @@
     ORDER BY Winrate;
     ```
 
+- On va trouver le taux de capture de pokemen avec le plus grand winrate.
+
+  - Neo4j
+
+    ```cypher
+  CALL{
+    MATCH (p1:Pokemon)-[c:COMBAT]-(p2:Pokemon) 
+    WHERE p1.id = c.winner
+    WITH p1, toFloat(COUNT(c))/size((p1)-[:COMBAT]-(:Pokemon)) AS number
+  RETURN p1.id AS id_max, p1.name AS name_max, MAX(ROUND(number, 2)) AS winrate_max
+    }
+MATCH(p3:Pokemon_bis) -[s:SAME]- (p1:Pokemon)
+    WHERE p3.name = name_max                                  
+  RETURN id_max,name_max,winrate_max,p3.cp ORDER BY winrate_max DESC LIMIT 1
+    ```
+    
+  - PostgreSQL
+  
+    ```sql
+    
+    ```
+  
 - On va trouver une chaine de Pokémon qui ont la table **Combat** :
 
   - Neo4j
