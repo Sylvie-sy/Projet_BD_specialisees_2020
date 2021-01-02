@@ -6,7 +6,7 @@
 
 
 
-## Importer les fichiers  ```.csv``` et créer les tables
+## 1. Importer les fichiers  ```.csv``` et créer les tables
 
 * Pour Neo4j
 
@@ -215,9 +215,22 @@
 
   
 
-## Liste de Requêtes
+## 2. Liste de Requêtes
+
+- Trouver tous les pokémon qui n'ont pas de relation **'COMBAT'** avec **'Pikachu'**
+
+  - Neo4j
+
+    ```cypher
+    MATCH (p1:Pokemon{name:'Pikachu'}), (p2:Pokemon)
+    WHERE NOT (p1)-[:COMBAT]-(p2)
+    RETURN p2.id, p2.name
+    ```
+
+    
 
 - On va trouver tous les pokémons qui a gagné le match avec Pikachu, retourne **id** et **name** de pokémon
+
   - Neo4j
 
     ```cypher
@@ -318,3 +331,81 @@ MATCH(p3:Pokemon_bis) -[s:SAME]- (p1:Pokemon)
     ```
 
     
+
+## 3. Graph Data Science Library
+
+* Shortest path - graphe anonyme
+
+  ```cypher
+  MATCH (p1:Pokemon {name:"Pikachu"}), (p2:Pokemon {name:"Bulbasaur"})
+  CALL gds.alpha.shortestPath.stream({
+      startNode: p1,
+      endNode: p2,
+      nodeProjection: "*",
+      relationshipProjection:{
+      all:{
+          type: "*",
+          orientation: "UNDIRECTED"
+  		}
+  	}
+  })
+  YIELD nodeId
+  RETURN gds.util.asNode(nodeId).name AS pp; 
+  ```
+
+* pagerank - graphe nommé
+
+  ```cypher
+  CALL gds.graph.create.cypher(
+      'graphe_pokemon',
+      'MATCH (p:Pokemon) RETURN p.id AS id',
+      'MATCH (p1)-[:COMBAT]-(p2) RETURN p1.id AS source, p2.id AS target'
+  )
+  ```
+
+  ```cypher
+  CALL gds.pageRank.stream('graphe_pokemon')
+  YIELD nodeId, score
+  RETURN gds.util.asNode(nodeId).name AS name, score
+  ```
+
+  ```cypher
+  CALL gds.pageRank.write('graphe_pokemon', {writeProperty:'pageRank'})
+  YIELD nodePropertiesWritten, ranIterations
+  ```
+
+  
+
+* degree
+
+  ```cypher
+  CALL gds.alpha.degree.stream('graphe_pokemon')
+  YIELD nodeId, score
+  RETURN gds.util.asNode(nodeId).name AS name, score
+  ORDER BY score LIMIT 10
+  ```
+
+* louvain
+
+  ```cypher
+  CALL gds.louvain.stream('graphe_pokemon')
+  YIELD nodeId, communityId
+  RETURN gds.util.asNode(nodeId).name AS name, communityId
+  ```
+
+  ```cypher
+  CALL gds.louvain.stats('graphe_pokemon')
+  YIELD communityCount
+  ```
+
+  ```cypher
+  CALL gds.louvain.mutate('graphe_pokemon', { mutateProperty: 'communityId' })
+  YIELD communityCount, modularity, modularities
+  ```
+
+  ```cypher
+  CALL gds.alpha.degree.write('graphe_pokemon', {writeProperty:'weightedFollowers'})
+  YIELD nodes, writeProperty
+  ```
+
+* 
