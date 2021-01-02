@@ -85,6 +85,14 @@
   MERGE (p1)-[:COMBAT {winner: toInteger(row.Winner)}]-(p2)
   ```
 
+  ```cypher
+  MATCH (p1:Pokemon),(p2:Pokemon_bis)
+  WHERE p1.name = p2.name
+  MERGE (p1)-[:SAME]-(p2)
+  ```
+
+  
+
 * Pour PostgreSQL
 
   ```sql

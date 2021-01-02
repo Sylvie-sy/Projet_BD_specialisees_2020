@@ -20,7 +20,7 @@
 
 ### 2. Implémenter une base de données relationnelle dans PostgreSQL
 
-- Réussir à importer 2 tableaux csv selon des requêtes de notre fichier Requetes.
+- Réussir à importer 3 tableaux csv selon des requêtes de notre fichier Requetes.
 
   ![创建psql-1](创建psql-1.png)
   
@@ -28,9 +28,11 @@
 
 ### 3. Implémenter une base de données graphe dans Neo4j
 
-- Réussir à importer 2 tableaux csv selon des requêtes de notre fichier Requetes.
+- Réussir à importer 3 tableaux csv selon des requêtes de notre fichier Requetes.
 
   ![创建neo4j](创建neo4j.jpg)
+  
+  ![创建neo4j-2](创建neo4j-2.png)
 
 
 
