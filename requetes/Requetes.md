@@ -47,11 +47,44 @@
   ```
 
   ```cypher
+  LOAD CSV with headers FROM 'file:///pokemon_bis.csv' AS row
+  CREATE (p2:Pokemon_bis{
+      ag_bug: toFloat(row.against_bug),
+      ag_dark: toFloat(row.against_dark),
+      ag_dragon: toFloat(row.against_dragon),
+      ag_electric: toFloat(row.against_electric),
+      ag_fairy: toFloat(row.against_fairy),
+      ag_fire: toFloat(row.against_fire),
+      ag_flying: toFloat(row.against_flying),
+      ag_ghost: toFloat(row.against_ghost),
+      ag_grass: toFloat(row.against_grass),
+      ag_ground: toFloat(row.against_ground),
+      ag_ice: toFloat(row.against_ice),
+      ag_normal: toFloat(row.against_normal),
+      ag_poison: toFloat(row.against_poison),
+      ag_psychic: toFloat(row.against_psychic),
+      ag_rock: toFloat(row.against_rock),
+      ag_steel: toFloat(row.against_steel),
+      ag_water: toFloat(row.against_water),
+      cp: toInteger(row.capture_rate),
+      h: toFloat(row.height_m),
+      name: row.name,
+      male_percentage: row.percentage_male,
+      id: toInteger(row.id),
+      type1: row.type1,
+      type2: row.type2,
+      w: toFloat(row.weight_kg),
+      g: toInteger(row.generation)
+  })
+  ```
+
+  ```cypher
   :auto USING PERIODIC COMMIT 500
   LOAD CSV WITH HEADERS FROM 'file:///combats.csv' AS row
   MATCH (p1:Pokemon {id: toInteger(row.First_pokemon)}), (p2:Pokemon {id: toInteger(row.Second_pokemon)})
   MERGE (p1)-[:COMBAT {winner: toInteger(row.Winner)}]-(p2)
   ```
+  
 
 * Pour PostgreSQL
 
@@ -142,7 +175,7 @@
     MATCH (p1:Pokemon)-[c:COMBAT]-(p2:Pokemon) WHERE p1.name='Pikachu' AND c.winner=p2.id RETURN p2.id, p2.name ORDER BY p2.id
     ```
 
-  - Sql
+  - PostgreSQL
 
     ```sql
     SELECT P.id, P.name 
@@ -168,7 +201,7 @@
     ORDER BY winrate DESC
     ```
 
-  - Sql
+  - PostgreSQL
 
     ```sql
     SELECT DISTINCT first_pokemon, ROUND(CAST(win_nb as numeric)/CAST(total as numeric),2) AS Winrate
@@ -182,4 +215,37 @@
     ORDER BY Winrate;
     ```
 
-- 
+- On va trouver une chaine de Pokémon qui ont la table **Combat** :
+
+  - Neo4j
+
+    ```cypher
+    MATCH (p1:Pokemon)-[:COMBAT*1..2]-(p2:Pokemon)
+    WHERE p1.name = 'Pikachu'
+    RETURN p2
+    ```
+
+  - PostgreSQL
+
+    ```mysql
+    WITH RECURSIVE cte AS (
+    	SELECT P.id, P.name, C.second_pokemon, 0 AS depth 
+        FROM pokemon P 
+        JOIN combats C
+    	ON P.id = C.first_pokemon
+        WHERE P.name = 'Pikachu'
+        UNION ALL
+        SELECT P2.id, P2.name, C.second_pokemon,cte.depth+1
+        FROM pokemon P2 
+        JOIN combats C
+    	ON P2.id = C.first_pokemon
+        JOIN cte ON P2.id = cte.second_pokemon
+        WHERE (cte.depth<3 AND P2.name <> 'Pikachu')
+    )
+    SELECT DISTINCT P.id, P.name
+    FROM pokemon P 
+    JOIN combats C
+    ON P.id = C.first_pokemon;
+    ```
+
+    

@@ -114,7 +114,44 @@
 
      <img src="winrate_psql_2.png"/>
 
-   * Résultat : **Neo4j - 3680 ms vs PostgreSQL - 14.12 ms**, Neo4j est plus efficace. 
+   * Résultat : **Neo4j - 3680 ms vs PostgreSQL - 14.12 ms**, SQL est plus efficace. 
+
+3. On va trouver une chaine de Pokémon qui ont la table **Combat** :
+
+   * Pour Neo4j:
+
+     ```cypher
+     MATCH (p1:Pokemon)-[:COMBAT*1..2]-(p2:Pokemon)
+     WHERE p1.name = 'Pikachu'
+     RETURN p2
+     ```
+
+     <img src="recursive_cypher.png"/>
+
+   * Pour PostgreSQL:
+
+     ```mysql
+     WITH RECURSIVE cte AS (
+     	SELECT P.id, P.name, C.second_pokemon, 0 AS depth 
+         FROM pokemon P 
+         JOIN combats C
+     	ON P.id = C.first_pokemon
+         WHERE P.name = 'Pikachu'
+         UNION ALL
+         SELECT P2.id, P2.name, C.second_pokemon,cte.depth+1
+         FROM pokemon P2 
+         JOIN combats C
+     	ON P2.id = C.first_pokemon
+         JOIN cte ON P2.id = cte.second_pokemon
+         WHERE (cte.depth<3 AND P2.name <> 'Pikachu')
+     )
+     SELECT DISTINCT P.id, P.name
+     FROM pokemon P 
+     JOIN combats C
+     ON P.id = C.first_pokemon;
+     ```
+
+     <img src="recursive_psql.png"/>
 
 ## Analytique de graphe
 
