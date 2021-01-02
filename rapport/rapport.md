@@ -12,7 +12,7 @@
 
 - Nous avons choisi **Pokémon** comme notre base de données: https://www.kaggle.com/terminus7/pokemon-challenge?select=pokemon.csv
 
-  <img src="pokemon.jpg" alt="pokemon" width="750" height="300" />
+  <img src="pokemon.jpg" alt="pokemon" />
 
 - Il y a 2 tableaux csv. 
   -  L'un est la liste des Pokémon (*pokemon.csv*), qui comprend l'identifiant du Pokémon, son nom, ses types d'attaque, les différentes valeurs d'attributs, les générations et les légendes.
