@@ -46,6 +46,10 @@
 
 ### 1. Neo4j
 
+1. Les requêtes cypher
+
+   <img src="plan_1.png"/>
+
 ### 2. Neo4j vs Postgresql
 
 1. On va trouver tous les pokémons qui a gagné le match avec Pikachu, retourne **id** et **name** de pokémon.
