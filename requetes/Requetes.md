@@ -12,12 +12,16 @@
 
   ```cypher
   DROP INDEX index_pokemon IF EXISTS
+  DROP INDEX index_pokemon_bis IF EXISTS
   ```
 
   ```cypher
   CREATE INDEX index_pokemon IF NOT EXISTS
-  FOR (n:Pokemon)
-  ON (n.Id, n.Name)
+  FOR (p:Pokemon)
+  ON (p.Id, p.Name)
+  CREATE INDEX index_pokemon_bis IF NOT EXISTS
+  FOR (p2:Pokemon_bis)
+  ON (p2.id, p2.name) 
   ```
 
   ```cypher

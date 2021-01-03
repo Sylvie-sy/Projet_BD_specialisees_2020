@@ -6,9 +6,9 @@
 
 
 
-## Choix et import d'un jeu de données
+## 1. Choix et import d'un jeu de données
 
-### 1. Choisir un jeu de données.
+### 1.1 Choisir un jeu de données.
 
 - Nous avons choisi **Pokémon** comme notre base de données: https://www.kaggle.com/terminus7/pokemon-challenge?select=pokemon.csv
 
@@ -18,7 +18,7 @@
   -  L'un est la liste des Pokémon (*pokemon.csv*), qui comprend l'identifiant du Pokémon, son nom, ses types d'attaque, les différentes valeurs d'attributs, les générations et les légendes.
   - L'autre est le tableau des combats des Pokémon (*combats.csv*), qui comprend les résultats de leurs rencontres individuelles.
 
-### 2. Implémenter une base de données relationnelle dans PostgreSQL
+### 1.2 Implémenter une base de données relationnelle dans PostgreSQL
 
 - Réussir à importer 3 tableaux csv selon des requêtes de notre fichier Requetes.
 
@@ -144,7 +144,7 @@
 
   ![创建psql-2](创建psql-2.png)
 
-### 3. Implémenter une base de données graphe dans Neo4j
+### 1.3 Implémenter une base de données graphe dans Neo4j
 
 - Réussir à importer 3 tableaux csv selon des requêtes de notre fichier Requetes.
 
@@ -223,17 +223,53 @@
 
 
 
-### Requêtes de Neo4j
+## 2. Requêtes
 
-----------
+### 2.1 Neo4j
 
-### 1. Neo4j
+1. Trouver le pokémon **'Pikachu'**
 
-1. Les requêtes cypher
+   ```cypher
+   MATCH (p1:Pokemon)
+   WHERE p1.name = "Pikachu"
+   RETURN p1.id, p1.name, p1.type1, p1.generation
+   ```
+
+   * plan d'exécution avec **INDEX**
+
+     <img src="plan_11.png"/>
+
+   * Plan d'exécution sans **INDEX**
+
+     <img src="plan_12.png"/>
+
+2. Trouver les pokémons qui ne sont pas le rival de **'Pikachu'**.
+
+   ```cypher
+   MATCH (p1:Pokemon{name:'Pikachu'}), (p2:Pokemon)
+   WHERE NOT (p1)-[:COMBAT]-(p2)
+   RETURN p2.id, p2.name
+   ```
+
+   * plan d'exécution avec **INDEX**
 
    <img src="plan_1.png"/>
 
-### 2. Neo4j vs Postgresql
+   * Plan d'exécution sans **INDEX**
+
+     <img src="plan_2.png"/>
+
+3. Trouver le nombre de pokémon qui ne sont pas le rival de **'Pikachu'**
+
+   ```cypher
+   MATCH (p1:Pokemon{name:'Pikachu'}), (p2:Pokemon)
+   WHERE NOT (p1)-[:COMBAT]-(p2)
+   RETURN p2.id, p2.name
+   ```
+
+   * Plan
+
+### 2.2 Neo4j vs Postgresql
 
 1. On va trouver tous les pokémons qui a gagné le match avec Pikachu, retourne **id** et **name** de pokémon.
 
@@ -245,7 +281,7 @@
 
      On parcourt les nodes autours de node **'Pikachu'** type pokemon en **'depth=1'**. C'est en temps O(1) (plus petits que 800 nodes O(M), parce qu'on a 800 en total). Donc c'est rapide.
 
-      <img src="requete1-neo4j.png"/>
+     <img src="requete1-neo4j.png"/>
 
    * Pour PostgreSQL, la requête est ci-dessous:
 
@@ -303,9 +339,9 @@
 
      <img src="winrate_psql_2.png"/>
 
-   * Résultat : **Neo4j - 3680 ms vs PostgreSQL - 14.12 ms**, SQL est plus efficace. 
+   * Résultat : **Neo4j - 3680 ms vs PostgreSQL - 14.12 ms**, PostgreSQL est plus efficace. 
 
-3. On va trouver une chaine de Pokémon qui ont la table **Combat** :
+3. On va trouver les rivaux de **'Pikachu'** et les rivaux de rivaux (depth=2) qui sont dans la table **Combat** :
 
    * Pour Neo4j:
 
@@ -316,6 +352,12 @@
      ```
 
      <img src="recursive_cypher.png"/>
+
+     C'est plus rapide, le principe est comme qu'on parcourt les nodes dans un graphe, pas besoin de parcourir tous les records de table. On peut voir le plan d'exécution.
+
+     <img src="plan_rival_avec_index.png"/>
+
+   
 
    * Pour PostgreSQL:
 
@@ -338,23 +380,33 @@
      FROM cte C;
      ```
 
+     Il est plus couteuse qand on utilise SQL. C'est parce qu'il faut parcourir la table **Combat** chaque itération. 
+
      <img src="recursive_psql.png"/>
 
      <img src="recursive_psql_time.png"/>
 
-## Analytique de graphe
+     Avec **EXPLAIN**, on peut observer la structure du notre commande.
 
-### 1. Algorithmes de la Grouph Data Science Library
+     <img src="explain_rival_psql.png"/>
 
-
-
-### 2. Utiliser des projections nommées
+   * Résultat : **Neo4j - 14 ms vs PostgreSQL - 23701 ms**, Neo4j est plus efficace. 
 
 
 
-### 3. Utiliser bloom pour visualiser l'analyse de nos données
+## 3. Analytique de graphe
+
+### 3.1 Algorithmes de la Grouph Data Science Library
 
 
 
-## Bonus
+### 3.2 Utiliser des projections nommées
+
+
+
+### 3.3 Utiliser bloom pour visualiser l'analyse de nos données
+
+
+
+## 4. Bonus
 
