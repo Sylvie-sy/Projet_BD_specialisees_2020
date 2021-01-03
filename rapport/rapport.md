@@ -398,15 +398,95 @@
 
 ### 3.1 Algorithmes de la Grouph Data Science Library
 
+1. Algo shortest path - graphe anonyme
+
+   ```cypher
+   MATCH (p1:Pokemon {name:"Pikachu"}), (p2:Pokemon {name:"Bulbasaur"})
+   CALL gds.alpha.shortestPath.stream({
+       startNode: p1,
+       endNode: p2,
+       nodeProjection: "*",
+       relationshipProjection:{
+       all:{
+           type: "*",
+           orientation: "UNDIRECTED"
+   		}
+   	}
+   })
+   YIELD nodeId
+   RETURN gds.util.asNode(nodeId).name AS pp; 
+   ```
+
+   <img src="shortest_path.png"/>
+
+2. Algo pagerank - graphe nommé
+
+   ```cypher
+   CALL gds.graph.create.cypher(
+       'graphe_pokemon',
+       'MATCH (p:Pokemon) RETURN p.id AS id',
+       'MATCH (p1)-[:COMBAT]-(p2) RETURN p1.id AS source, p2.id AS target'
+   )
+   ```
+
+   ```cypher
+   CALL gds.pageRank.stream('graphe_pokemon')
+   YIELD nodeId, score
+   RETURN gds.util.asNode(nodeId).name AS name, score
+   ```
+
+   ```cypher
+   CALL gds.pageRank.write('graphe_pokemon', {writeProperty:'pageRank'})
+   YIELD nodePropertiesWritten, ranIterations
+   ```
+
+   <img src="page_rank.png"/>
+
+3. Algo degree
+
+   ```cypher
+   CALL gds.alpha.degree.stream('graphe_pokemon')
+   YIELD nodeId, score
+   RETURN gds.util.asNode(nodeId).name AS name, score
+   ORDER BY score DESC LIMIT 10
+   ```
+
+   <img src="degeree.png"/>
+
+4. Algo louvain
+
+   ```cypher
+   CALL gds.louvain.stream('graphe_pokemon')
+   YIELD nodeId, communityId
+   RETURN gds.util.asNode(nodeId).name AS name, communityId
+   ```
+
+   ```cypher
+   CALL gds.louvain.stats('graphe_pokemon')
+   YIELD communityCount
+   ```
+
+   ```cypher
+   CALL gds.louvain.mutate('graphe_pokemon', { mutateProperty: 'communityId' })
+   YIELD communityCount, modularity, modularities
+   ```
+
+   ```cypher
+   CALL gds.alpha.degree.write('graphe_pokemon', {writeProperty:'weightedFollowers'})
+   YIELD nodes, writeProperty
+   ```
+
+   <img src="louvain.png"/>
 
 
-### 3.2 Utiliser des projections nommées
 
+### 3.2 bloom 
 
+1. Voir les node qui a une relation avec **'Pikachu'**
 
-### 3.3 Utiliser bloom pour visualiser l'analyse de nos données
+   <img src="bloom_1.png"/>
 
-
+2. <img src="bloom_2.png"/>
 
 ## 4. Bonus
 

@@ -386,7 +386,7 @@ MATCH(p3:Pokemon_bis) -[s:SAME]- (p1:Pokemon)
   CALL gds.alpha.degree.stream('graphe_pokemon')
   YIELD nodeId, score
   RETURN gds.util.asNode(nodeId).name AS name, score
-  ORDER BY score LIMIT 10
+  ORDER BY score DESC LIMIT 10
   ```
 
 * louvain
@@ -411,5 +411,4 @@ MATCH(p3:Pokemon_bis) -[s:SAME]- (p1:Pokemon)
   CALL gds.alpha.degree.write('graphe_pokemon', {writeProperty:'weightedFollowers'})
   YIELD nodes, writeProperty
   ```
-
-* 
+  
