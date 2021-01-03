@@ -314,7 +314,15 @@
       RETURN p1.id, p1.name
       ```
 
-   
+   7. Trouver tous les combats de pokémon **d'eau** et **de feu**, et **leur côté gagnant**.
+
+      ```cypher
+      MATCH (p1:Pokemon)-[c:COMBAT]-(p2:Pokemon)
+      WHERE (p1.type1='Water' OR p1.type2='Water') AND (p2.type1='Fire' OR p2.type2='Fire')
+      RETURN p1.id AS Water_id,p1.name AS Water_name,c.winner, p2.id AS Fire_id ,p2.name AS Fire_name
+      ```
+
+      
 
 ### 2.2 Neo4j vs Postgresql
 
