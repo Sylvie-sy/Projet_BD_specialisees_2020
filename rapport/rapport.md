@@ -486,7 +486,13 @@
 
    <img src="bloom_1.png"/>
 
-2. <img src="bloom_2.png"/>
+2. La relation **'SAME'**<img src="bloom_2.png"/>
+
+3. Shortest path entre **'Pikachu'** et **'Mega Aerodactyl'**
+
+   <img src="shortest_bloom.png"/>
+
+   <img src="bloom_s2.png"/>
 
 ## 4. Bonus
 
