@@ -92,7 +92,6 @@
       PRIMARY KEY (id, name)
   );
   
-  
   --------------------
   -- 02 Insert Data --
   --------------------
@@ -139,10 +138,11 @@
   -- ici, 'bai' est mon login, vous devez le remplacer par votre
   SET search_path TO bds,PUBLIC
   ```
+  
 
-  ![创建psql-1](创建psql-1.png)
+![创建psql-1](创建psql-1.png)
 
-  ![创建psql-2](创建psql-2.png)
+![创建psql-2](创建psql-2.png)
 
 ### 1.3 Implémenter une base de données graphe dans Neo4j
 
@@ -235,13 +235,13 @@
    RETURN p1.id, p1.name, p1.type1, p1.generation
    ```
 
-   * plan d'exécution avec **INDEX**
+   * Plan d'exécution **avec INDEX**
 
-     <img src="plan_11.png"/>
+     ![plan_1](plan_1.png)
 
-   * Plan d'exécution sans **INDEX**
+   * Plan d'exécution **sans INDEX**
 
-     <img src="plan_12.png"/>
+     ![plan_1_sans](plan_1_sans.png)
 
 2. Trouver les pokémons qui ne sont pas le rival de **'Pikachu'**.
 
@@ -251,23 +251,48 @@
    RETURN p2.id, p2.name
    ```
 
-   * plan d'exécution avec **INDEX**
+   * Plan d'exécution **avec INDEX**
 
-   <img src="plan_1.png"/>
+     ![plan_2](plan_2.png)
 
-   * Plan d'exécution sans **INDEX**
+   * Plan d'exécution **sans INDEX**
 
-     <img src="plan_2.png"/>
+     ![plan_2_sans](plan_2_sans.png)
 
-3. Trouver le nombre de pokémon qui ne sont pas le rival de **'Pikachu'**
+3. Trouver tous les pokémon a combattu **'Bulbasaur'** et qui ont l'attribut **'Grass'**.
 
    ```cypher
-   MATCH (p1:Pokemon{name:'Pikachu'}), (p2:Pokemon)
-   WHERE NOT (p1)-[:COMBAT]-(p2)
-   RETURN p2.id, p2.name
+   MATCH (p1:Pokemon{name:'Bulbasaur'}), (p2:Pokemon)
+   WHERE (p1)-[:COMBAT]-(p2) AND (p2.type1='Grass' OR p2.type2='Grass')
+   RETURN p2.id, p2.name 
    ```
 
-   * Plan
+   - Plan d'exécution **avec INDEX**
+
+     ![plan_3](plan_3.png)
+
+   - Plan d'exécution **sans INDEX**
+
+     ![plan_3_sans](plan_3_sans.png)
+
+4. Calculer le taux de réussite de la capture de **'Pikachu'** et de **'Psyduck'**. 
+   (Équation du taux de réussite de la capture = capture_rate/255+generation*10)
+
+   ```cypher
+   MATCH (p1:Pokemon),(p2:Pokemon_bis)
+   WHERE (p1) -[:SAME]- (p2) AND (p1.name='Pikachu' OR p1.name='Psyduck')                      
+   WITH p1, toFloat(p2.cp/255 + p1.generation*10) AS Taux
+   RETURN p1.id, p1.name, ROUND(Taux,2) AS Taux_reus_capture
+   ORDER BY Taux_reus_capture DESC
+   ```
+
+   - Plan d'exécution **avec INDEX**
+
+     ![plan_4](plan_4.png)
+
+   - Plan d'exécution **sans INDEX**
+
+     ![plan_4_sans](plan_4_sans.png)
 
 ### 2.2 Neo4j vs Postgresql
 
@@ -302,6 +327,8 @@
      <img src="requete1-psql.png"/>
 
    * Résultat : **Neo4j - 5ms vs PostgreSQL - 15ms**, Neo4j est plus efficace. 
+
+     
 
 2. On va trouver les **winrates** pour tous les pokémons
 
@@ -341,9 +368,56 @@
 
    * Résultat : **Neo4j - 3680 ms vs PostgreSQL - 14.12 ms**, PostgreSQL est plus efficace. 
 
-3. On va trouver les rivaux de **'Pikachu'** et les rivaux de rivaux (depth=2) qui sont dans la table **Combat** :
+     
 
-   * Pour Neo4j:
+3. On va trouver **le taux de capture** de pokemen avec **le plus grand winrate**.
+
+   - Pour Neo4j:
+
+     ```cypher
+     CALL{
+     MATCH (p1:Pokemon)-[c:COMBAT]-(p2:Pokemon) 
+     WHERE p1.id = c.winner
+     WITH p1, toFloat(COUNT(c))/size((p1)-[:COMBAT]-(:Pokemon)) AS number
+     RETURN p1.id AS id_max, p1.name AS name_max, MAX(ROUND(number, 2)) AS winrate_max
+     }
+     MATCH(p3:Pokemon_bis) -[s:SAME]- (p1:Pokemon)
+     WHERE p3.name = name_max                                  
+     RETURN id_max,name_max,winrate_max,p3.cp ORDER BY winrate_max DESC LIMIT 3
+     ```
+
+     ![reque-1](reque-1.png)
+
+   - Pour PostgreSQL:
+
+     ```sql
+     WITH Max_winrate(first_pokemon, Winrate) AS (
+     SELECT DISTINCT first_pokemon, ROUND(CAST(win_nb as numeric)/CAST(total as numeric),2) AS Winrate
+     FROM (
+     SELECT first_pokemon,
+     COUNT(*) total,
+         SUM(case when first_pokemon=winner then 1 else 0 end) AS win_nb
+         FROM combats
+         GROUP BY first_pokemon
+     ) x
+     )
+     SELECT Pokemon.name,Max_winrate.Winrate,Pokemon_bis.capture_rate
+     FROM Pokemon,Max_winrate,Pokemon_bis
+     WHERE Pokemon.id = Max_winrate.first_pokemon AND Pokemon_bis.name = Pokemon.name
+     ORDER BY Max_winrate.Winrate DESC LIMIT 3;
+     ```
+
+     ![reque-2](reque-2.png)
+     
+     Sur la base de la capture d'écran des résultats, nous arrivons au résultat.
+     
+   - Résultat : **Neo4j - 3661 ms vs PostgreSQL - 38.195 ms**, PostgreSQL est plus efficace. 
+
+     
+
+4. On va trouver les rivaux de **'Pikachu'** et les rivaux de rivaux (depth=2) qui sont dans la table **Combat** :
+
+   - Pour Neo4j:
 
      ```cypher
      MATCH (p1:Pokemon)-[:COMBAT*1..2]-(p2:Pokemon)
@@ -357,11 +431,9 @@
 
      <img src="plan_rival_avec_index.png"/>
 
-   
+   - Pour PostgreSQL:
 
-   * Pour PostgreSQL:
-
-     ```mysql
+     ```sql
      WITH RECURSIVE cte AS (
      	SELECT P.id, P.name, C.second_pokemon, 0 AS depth 
          FROM pokemon P 
@@ -390,7 +462,7 @@
 
      <img src="explain_rival_psql.png"/>
 
-   * Résultat : **Neo4j - 14 ms vs PostgreSQL - 23701 ms**, Neo4j est plus efficace. 
+   - Résultat : **Neo4j - 14 ms vs PostgreSQL - 23701 ms**, Neo4j est plus efficace. 
 
 
 
@@ -419,6 +491,8 @@
 
    <img src="shortest_path.png"/>
 
+   
+
 2. Algo pagerank - graphe nommé
 
    ```cypher
@@ -442,6 +516,8 @@
 
    <img src="page_rank.png"/>
 
+   
+
 3. Algo degree
 
    ```cypher
@@ -452,6 +528,8 @@
    ```
 
    <img src="degeree.png"/>
+
+   
 
 4. Algo louvain
 
@@ -488,9 +566,13 @@
 
    <img src="bloom_new_1.png"/>
 
+   
+
 2. La relation **'SAME'**<img src="bloom_2.png"/>
 
    <img src="bloom_new_2.png"/>
+
+   
 
 3. Shortest path entre **'Pikachu'** et **'Mega Aerodactyl'**
 
@@ -503,6 +585,8 @@
    <img src="bloom_new_4.png"/>
 
    <img src="bloom_new_5.png"/>
+   
+   
 
 ## 4. Bonus
 
