@@ -281,6 +281,13 @@
    RETURN p1.id AS Water_id,p1.name AS Water_name,c.winner, p2.id AS Fire_id ,p2.name AS Fire_name
    ```
 
+8. Touver les points d'attacks de **"Pikachu"** aux ses rivaux
+
+   ```cypher
+   MATCH (p1:Pokemon {name:"Pikachu"})-[:COMBATS]-(p2:Pokemon), (p2)-[:SAME]-(p3:Pokemon_bis)
+   RETURN p1.name AS attack_from, p2.id, p2.name, (p1.attck * p3.ag_electric) AS hp_loss, (p2.hp - (p1.attck * p3.ag_electric)) AS hp_rest
+   ```
+
    
 
 ### 2.2 Requêtes de "Neo4j vs Postgresql"

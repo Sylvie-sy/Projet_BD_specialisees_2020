@@ -4,7 +4,7 @@
 
 *BAI Yuchen, 71418516,  M2 Informatique parcours DATA (yuchenbai@hotmail.com)*
 
-
+Lien vers notre projet : <https://github.com/Sylvie-sy/Projet_BD_specialisees_2020>
 
 ## 1. Choix et import d'un jeu de données
 
@@ -316,17 +316,17 @@
       ```
       <img src="6.png"/>
 
-      7. Trouver tous les combats de pokémon **d'eau** et **de feu**, et **leur côté gagnant**.
+   7. Trouver tous les combats de pokémon **d'eau** et **de feu**, et **leur côté gagnant**.
 
-         ```cypher
-         MATCH (p1:Pokemon)-[c:COMBAT]-(p2:Pokemon)
-         WHERE (p1.type1='Water' OR p1.type2='Water') AND (p2.type1='Fire' OR p2.type2='Fire')
-         RETURN p1.id AS Water_id,p1.name AS Water_name,c.winner, p2.id AS Fire_id ,p2.name AS Fire_name
-         ```
+      ```cypher
+      MATCH (p1:Pokemon)-[c:COMBAT]-(p2:Pokemon)
+      WHERE (p1.type1='Water' OR p1.type2='Water') AND (p2.type1='Fire' OR p2.type2='Fire')
+      RETURN p1.id AS Water_id,p1.name AS Water_name,c.winner, p2.id AS Fire_id ,p2.name AS Fire_name
+      ```
 
-         <img src="7_bis.png"/>
+      <img src="7_bis.png"/>
 
-   8. ouver les points d'attacks de **"Pikachu"** aux ses rivaux
+   8. Touver les points d'attacks de **"Pikachu"** aux ses rivaux
 
       ```cypher
       MATCH (p1:Pokemon {name:"Pikachu"})-[:COMBATS]-(p2:Pokemon), (p2)-[:SAME]-(p3:Pokemon_bis)
@@ -334,7 +334,7 @@
       ```
 
       <img src="7.png"/>
-​      
+      ​      
 
 ### 2.2 Neo4j vs Postgresql
 
