@@ -302,9 +302,10 @@
 
       ```cypher
       MATCH (p:Pokemon)
-      WHERE p.type1='Grass' OR p.type2='Grass'
+      WHERE (p.type1='Grass' OR p.type2='Grass') AND p.generation = 1
       RETURN count(p)
       ```
+      <img src="5.png"/>
 
    6. Trouver des Pokémons avec une attack supérieure à sp_atk et un taux de capture supérieur à 100.
 
@@ -313,16 +314,27 @@
       WHERE (p1)-[:SAME]-(p2) AND p2.cp>100 AND p1.attack>p1.sp_atk
       RETURN p1.id, p1.name
       ```
+      <img src="6.png"/>
 
-   7. Trouver tous les combats de pokémon **d'eau** et **de feu**, et **leur côté gagnant**.
+      7. Trouver tous les combats de pokémon **d'eau** et **de feu**, et **leur côté gagnant**.
+
+         ```cypher
+         MATCH (p1:Pokemon)-[c:COMBAT]-(p2:Pokemon)
+         WHERE (p1.type1='Water' OR p1.type2='Water') AND (p2.type1='Fire' OR p2.type2='Fire')
+         RETURN p1.id AS Water_id,p1.name AS Water_name,c.winner, p2.id AS Fire_id ,p2.name AS Fire_name
+         ```
+
+         <img src="7_bis.png"/>
+
+   8. ouver les points d'attacks de **"Pikachu"** aux ses rivaux
 
       ```cypher
-      MATCH (p1:Pokemon)-[c:COMBAT]-(p2:Pokemon)
-      WHERE (p1.type1='Water' OR p1.type2='Water') AND (p2.type1='Fire' OR p2.type2='Fire')
-      RETURN p1.id AS Water_id,p1.name AS Water_name,c.winner, p2.id AS Fire_id ,p2.name AS Fire_name
+      MATCH (p1:Pokemon {name:"Pikachu"})-[:COMBATS]-(p2:Pokemon), (p2)-[:SAME]-(p3:Pokemon_bis)
+      RETURN p1.name AS attack_from, p2.id, p2.name, (p1.attck * p3.ag_electric) AS hp_loss, (p2.hp - (p1.attck * p3.ag_electric)) AS hp_rest
       ```
 
-      
+      <img src="7.png"/>
+​      
 
 ### 2.2 Neo4j vs Postgresql
 
