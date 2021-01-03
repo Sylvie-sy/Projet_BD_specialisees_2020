@@ -300,7 +300,20 @@ MATCH(p3:Pokemon_bis) -[s:SAME]- (p1:Pokemon)
   - PostgreSQL
   
     ```sql
-    
+    WITH Max_winrate(first_pokemon, Winrate) AS (
+    SELECT DISTINCT first_pokemon, ROUND(CAST(win_nb as numeric)/CAST(total as numeric),2) AS Winrate
+    FROM (
+    SELECT first_pokemon,
+    COUNT(*) total,
+        SUM(case when first_pokemon=winner then 1 else 0 end) AS win_nb
+        FROM combats
+        GROUP BY first_pokemon
+    ) x
+    )
+    SELECT Pokemon.name,Max_winrate.Winrate,Pokemon_bis.capture_rate
+    FROM Pokemon,Max_winrate,Pokemon_bis
+    WHERE Pokemon.id = Max_winrate.first_pokemon AND Pokemon_bis.name = Pokemon.name
+    ORDER BY Max_winrate.Winrate DESC LIMIT 1;
     ```
   
 - On va trouver une chaine de Pokémon qui ont la table **Combat** :
@@ -412,3 +425,4 @@ MATCH(p3:Pokemon_bis) -[s:SAME]- (p1:Pokemon)
   YIELD nodes, writeProperty
   ```
   
+
