@@ -254,7 +254,7 @@
    RETURN count(p)
    ```
 
-5. Trouver des Pokémons avec une attack supérieure à sp_atk et un taux de capture supérieur à 100
+5. Trouver des Pokémons avec une attack supérieure à sp_atk et un taux de capture supérieur à 100.
 
    ```cypher
    MATCH (p1:Pokemon),(p2:Pokemon_bis)

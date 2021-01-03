@@ -242,6 +242,8 @@
    * Plan d'exécution **sans INDEX**
 
      ![plan_1_sans](plan_1_sans.png)
+     
+     
 
 2. Trouver les pokémons qui ne sont pas le rival de **'Pikachu'**.
 
@@ -293,6 +295,26 @@
    - Plan d'exécution **sans INDEX**
 
      ![plan_4_sans](plan_4_sans.png)
+
+   
+
+   5. Calculer le nombre total de pokémon des attributs du **'Grass'**.
+
+      ```cypher
+      MATCH (p:Pokemon)
+      WHERE p.type1='Grass' OR p.type2='Grass'
+      RETURN count(p)
+      ```
+
+   6. Trouver des Pokémons avec une attack supérieure à sp_atk et un taux de capture supérieur à 100.
+
+      ```cypher
+      MATCH (p1:Pokemon),(p2:Pokemon_bis)
+      WHERE (p1)-[:SAME]-(p2) AND p2.cp>100 AND p1.attack>p1.sp_atk
+      RETURN p1.id, p1.name
+      ```
+
+   
 
 ### 2.2 Neo4j vs Postgresql
 
