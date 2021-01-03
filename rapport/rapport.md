@@ -590,4 +590,50 @@
 
 ## 4. Bonus
 
- 
+1. Apache TinkerPop
+
+   On télécharge l'application **Apache TinkerPop** et jouer les commandes. C'est facile à commencer et comprendre le code.
+
+   <img src="tinkerpop_g_v.png"/>
+
+   De plus, on écrite un script pour importer les records du **pokemon.csv**
+
+   ```groovy
+   graph = TinkerGraph.open()
+   //graph.createIndex('Id', Vertex.class) //1
+   
+   g = traversal().withEmbedded(graph)
+   entityToId = [:]
+   
+   new File('data/pokemon.csv').eachLine { line, count ->
+     // Skip header
+     if (count > 1){
+       
+       columns = line.split(',', -1)
+       
+       (Id, Name, Type_1, Type_2, HP, Attack, Defense, Sp_Atk, Sp_def, Speed, Generation, Legendary) = columns 
+   
+       node = g.addV('pokemon')
+         .property('id', Id)
+         .property('name', Name)
+         .property('type1', Type_1)
+         .property('type2', Type_2)
+         .property('hp', HP)
+         .property('attack', Attack)
+         .property('defense', Defense)
+         .property('sp_atk', Sp_Atk)
+         .property('sp_def', Sp_def)
+         .property('speed', Speed)
+         .property('generation', Generation)
+         .property('legendary', Legendary)
+         .next()
+     }
+   }
+   
+   graph.close()
+   ```
+
+   Et on a réussie de les importer.
+
+   <img src="tinkerpop_2.png"/>
+
